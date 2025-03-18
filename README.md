@@ -1,4 +1,12 @@
-#結構如下：
+# Trading Platform (Go)
+
+![Go](https://img.shields.io/badge/Go-1.XX-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+
+A scalable and modular trading platform written in Go. This project consists of an API Gateway and a Matching Engine designed to handle trading operations efficiently.
+
+## Project Structure
+
+```
 trading-platform-go/
 ├── cmd
 │   ├── api-gateway
@@ -17,8 +25,52 @@ trading-platform-go/
 │       └── helpers.go
 ├── go.mod
 └── go.sum
+```
 
-下一步的建議
-在 internal/engine 中加入具體的撮合邏輯。
-在 internal/gateway 中整合 API 轉發，將 API Gateway 真正連接到 Matching Engine。
-在 internal 下新增其他需要的功能模組（例如用戶管理、權限管理）。
+## Features
+
+- **API Gateway**: Manages client requests and routes them to the appropriate services.
+- **Matching Engine**: Handles trade matching and execution.
+- **WebSocket Support**: Provides real-time updates to clients.
+- **Modular Architecture**: Organized structure for scalability and maintainability.
+
+## Next Steps
+
+✅ **Enhance Matching Logic**: Implement robust trade matching in `internal/engine/match.go`.
+
+✅ **Integrate API Forwarding**: Connect API Gateway to Matching Engine in `internal/gateway/`.
+
+✅ **Expand Functional Modules**: Add user management, authentication, and permissions under `internal/`.
+
+## Getting Started
+
+### Prerequisites
+- Go 1.24.1+
+- Docker (optional, for containerized deployment)
+
+### Installation
+
+```sh
+git clone https://github.com/ArnoldChiou/trading-platform-go.git
+cd trading-platform-go
+go mod tidy
+```
+
+### Running the Services
+
+#### API Gateway
+```sh
+go run cmd/api-gateway/main.go
+```
+
+#### Matching Engine
+```sh
+go run cmd/matching-engine/main.go
+```
+
+### Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
+
+### License
+This project is licensed under the Arnold License.
+
