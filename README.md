@@ -1,6 +1,6 @@
 # Trading Platform (Go)
 
-![Go](https://img.shields.io/badge/Go-1.XX-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Go](https://img.shields.io/badge/Go-1.24-blue)
 
 A scalable and modular trading platform written in Go. This project consists of an API Gateway and a Matching Engine designed to handle trading operations efficiently.
 
