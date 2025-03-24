@@ -75,6 +75,9 @@ Contributions are welcome! Please open an issue or submit a pull request.
 This project is licensed under the Arnold License.
 
 ### Jason Example
+1. Go to website "https://websocketking.com/"
+2. Enter "ws://127.0.0.1:5002/ws" & Press Connect
+3. Send Json-> https://websocketking.com/
 ```sh
 {
 	"type": "BUY",
