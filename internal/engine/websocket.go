@@ -3,6 +3,7 @@ package engine
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -26,14 +27,21 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	defer ws.Close()
 
 	for {
-		var msg map[string]interface{}
-		if err := ws.ReadJSON(&msg); err != nil {
-			log.Println("Error:", err)
+		var order Order
+		if err := ws.ReadJSON(&order); err != nil {
+			log.Println("讀取訊息錯誤:", err)
 			break
 		}
-		log.Printf("Received: %v", msg)
 
-		// TODO: 撮合交易邏輯
-		ws.WriteJSON(map[string]string{"status": "matched"})
+		// 為訂單加入ID與Timestamp
+		order.ID = time.Now().UnixNano()
+		order.Timestamp = time.Now()
+
+		AddOrder(&order)
+
+		ws.WriteJSON(map[string]interface{}{
+			"status": "received",
+			"order":  order,
+		})
 	}
 }

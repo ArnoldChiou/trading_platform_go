@@ -74,3 +74,20 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ### License
 This project is licensed under the Arnold License.
 
+### Jason Example
+```sh
+{
+	"type": "BUY",
+	"symbol": "BTCUSD",
+	"price": 42000,
+	"quantity": 1.5
+}
+```
+```sh
+{
+  "type": "SELL",
+  "symbol": "BTCUSD",
+  "price": 42000,
+  "quantity": 1
+}
+```
