@@ -1,27 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>WebSocket 測試</title>
   <style>
-    body { font-family: sans-serif; padding: 2em; }
-    #log { white-space: pre-wrap; border: 1px solid #ccc; padding: 1em; height: 200px; overflow-y: scroll; }
-    input, button { margin-top: 1em; }
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    #log {
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+      padding: 1em;
+      height: 250px;
+      overflow-y: scroll;
+      background-color: #f8f8f8;
+    }
+
+    input,
+    button {
+      padding: 0.5em;
+      margin-top: 1em;
+      font-size: 14px;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+    }
+
+    .status {
+      margin-top: 1em;
+      font-weight: bold;
+    }
+
+    .status.connected {
+      color: green;
+    }
+
+    .status.error {
+      color: red;
+    }
+
+    .status.closed {
+      color: gray;
+    }
   </style>
 </head>
+
 <body>
   <h2>🧪 WebSocket 測試工具</h2>
+
   <div>
     <label>WebSocket URL：</label>
     <input type="text" id="ws-url" value="ws://127.0.0.1:5002/ws" size="40">
-    <button onclick="connect()">連線</button>
+    <button onclick="connect()" id="btn-connect">連線</button>
+    <button onclick="disconnect()" id="btn-disconnect" disabled>斷開</button>
   </div>
 
-  <div id="status">尚未連線</div>
+  <div id="status" class="status closed">🔌 尚未連線</div>
 
   <div style="margin-top: 1em;">
     <input type="text" id="message" placeholder="輸入訊息" />
-    <button onclick="sendMessage()">送出</button>
+    <button onclick="sendMessage()">送出訊息</button>
   </div>
 
   <h3>📜 Log：</h3>
@@ -30,10 +74,20 @@
   <script>
     let socket;
 
-    function log(message) {
-      const logEl = document.getElementById("log");
-      logEl.textContent += message + "\n";
+    const logEl = document.getElementById("log");
+    const statusEl = document.getElementById("status");
+    const connectBtn = document.getElementById("btn-connect");
+    const disconnectBtn = document.getElementById("btn-disconnect");
+
+    function log(message, type = 'info') {
+      const now = new Date().toLocaleTimeString();
+      logEl.textContent += `[${now}] ${message}\n`;
       logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateStatus(text, state) {
+      statusEl.textContent = text;
+      statusEl.className = 'status ' + state;
     }
 
     function connect() {
@@ -41,35 +95,52 @@
       socket = new WebSocket(url);
 
       socket.onopen = () => {
-        document.getElementById("status").textContent = "✅ 已連線到 " + url;
-        log("[OPEN] 連線成功");
+        updateStatus("✅ 已連線到 " + url, 'connected');
+        log("連線成功", 'success');
+        connectBtn.disabled = true;
+        disconnectBtn.disabled = false;
       };
 
       socket.onmessage = (event) => {
-        log("[RECEIVED] " + event.data);
+        log("📥 收到訊息：" + event.data, 'info');
       };
 
       socket.onerror = (error) => {
-        log("[ERROR] " + error.message);
-        document.getElementById("status").textContent = "❌ 發生錯誤";
+        log("❌ 錯誤發生：" + error.message, 'error');
+        updateStatus("❌ 發生錯誤", 'error');
       };
 
-      socket.onclose = () => {
-        log("[CLOSED] 連線已關閉");
-        document.getElementById("status").textContent = "🔌 連線已關閉";
+      socket.onclose = (event) => {
+        log(`🔌 連線已關閉 (Code: ${event.code})`, 'info');
+        updateStatus("🔌 連線已關閉", 'closed');
+        connectBtn.disabled = false;
+        disconnectBtn.disabled = true;
       };
     }
 
+    function disconnect() {
+      if (socket) {
+        socket.close();
+      }
+    }
+
     function sendMessage() {
-      const msg = document.getElementById("message").value;
+      const msgEl = document.getElementById("message");
+      const msg = msgEl.value.trim();
+      if (!msg) {
+        log("⚠️ 請輸入訊息內容", 'warning');
+        return;
+      }
+
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(msg);
-        log("[SENT] " + msg);
+        log("📤 已送出訊息：" + msg, 'info');
+        msgEl.value = ""; // 送出後清空
       } else {
-        log("[ERROR] WebSocket 尚未連線");
+        log("⚠️ WebSocket 尚未連線", 'warning');
       }
     }
   </script>
 </body>
+
 </html>
-s
