@@ -2,7 +2,7 @@
 
 ![Go](https://img.shields.io/badge/Go-1.24-blue)
 
-A scalable and modular trading platform written in Go. This project consists of an API Gateway and a Matching Engine designed to handle trading operations efficiently.
+A scalable and modular trading platform written in Go. This project consists of an **API Gateway**, a **Matching Engine**, and a **React Frontend** designed to handle trading operations efficiently and provide real-time updates.
 
 ## Project Structure
 
@@ -16,10 +16,12 @@ trading-platform-go/
 ├── internal
 │   ├── gateway
 │   │   ├── handlers.go
-│   │   └── routes.go
+│   │   ├── routes.go
+│   │   └── ws_client.go
 │   └── engine
 │       ├── websocket.go
-│       └── match.go
+│       ├── match.go
+│       └── order.go
 ├── pkg
 │   └── utils
 │       └── helpers.go
@@ -29,23 +31,32 @@ trading-platform-go/
 
 ## Features
 
-- **API Gateway**: Manages client requests and routes them to the appropriate services.
-- **Matching Engine**: Handles trade matching and execution.
-- **WebSocket Support**: Provides real-time updates to clients.
+- **API Gateway**: Manages client requests and routes them to the appropriate services via REST and WebSocket.
+- **Matching Engine**: Handles trade matching and execution using FIFO logic.
+- **WebSocket Support**: Provides real-time updates and notifications for trading events.
+- **React Frontend Integration**: Web interface built with React, integrated via REST APIs and WebSocket for real-time trading.
 - **Modular Architecture**: Organized structure for scalability and maintainability.
+
+## Current Progress
+
+✅ **Matching Logic Implemented**: Robust trade matching logic with real-time client notifications.
+
+✅ **API Gateway Integrated**: API Gateway connected to the Matching Engine, supporting cross-service communication.
+
+✅ **Real-Time Web Interface**: React frontend fully integrated and functional, with live updates through WebSocket.
 
 ## Next Steps
 
-✅ **Enhance Matching Logic**: Implement robust trade matching in `internal/engine/match.go`.
-
-✅ **Integrate API Forwarding**: Connect API Gateway to Matching Engine in `internal/gateway/`.
-
-✅ **Expand Functional Modules**: Add user management, authentication, and permissions under `internal/`.
+- **User Authentication and Account Management**: Implement user management, authentication (JWT), and permissions.
+- **Risk Management Module**: Develop a Python-based risk management engine to enforce trading rules.
+- **Database Integration**: Persist orders and trade history using PostgreSQL or Redis.
+- **Deployment Automation**: Containerize services with Docker and automate deployments using CI/CD pipelines.
 
 ## Getting Started
 
 ### Prerequisites
 - Go 1.24.1+
+- Node.js & npm (for React frontend)
 - Docker (optional, for containerized deployment)
 
 ### Installation
@@ -58,39 +69,59 @@ go mod tidy
 
 ### Running the Services
 
-#### API Gateway
-```sh
-go run cmd/api-gateway/main.go
-```
-
 #### Matching Engine
+
 ```sh
 go run cmd/matching-engine/main.go
 ```
 
-### Contributing
-Contributions are welcome! Please open an issue or submit a pull request.
+#### API Gateway
 
-### License
-This project is licensed under the Arnold License.
-
-### Jason Example
-1. Go to website "https://websocketking.com/"
-2. Enter "ws://127.0.0.1:5002/ws" & Press Connect
-3. Send Json-> https://websocketking.com/
 ```sh
+go run cmd/api-gateway/main.go
+```
+
+#### React Frontend
+
+```sh
+cd trading-platform-web
+npm install
+npm run dev
+```
+
+Open your browser at `http://localhost:5173`.
+
+## Example Usage
+
+1. Navigate to `http://localhost:5173`.
+2. Submit a buy and sell order via the React interface:
+
+**Buy Order Example:**
+```json
 {
 	"type": "BUY",
 	"symbol": "BTCUSD",
 	"price": 42000,
-	"quantity": 1.5
+	"quantity": 1
 }
 ```
-```sh
+
+**Sell Order Example:**
+```json
 {
-  "type": "SELL",
-  "symbol": "BTCUSD",
-  "price": 42000,
-  "quantity": 1
+	"type": "SELL",
+	"symbol": "BTCUSD",
+	"price": 41950,
+	"quantity": 1
 }
 ```
+
+The Matching Engine will automatically execute and notify you in real-time via WebSocket.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+This project is licensed under the Arnold License.
+
