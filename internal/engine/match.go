@@ -61,8 +61,15 @@ func matchOrders(symbol, clientID string) {
 
 			log.Printf("成交通知: %+v", trade)
 
-			// 成交後通知買賣雙方 (此範例簡單處理，實務需紀錄雙方clientID)
-			notifyClient(clientID, trade)
+			// 【重點】推送給所有已連線的客戶端
+			clientsMu.Lock()
+			for _, client := range clients {
+				err := client.Conn.WriteJSON(trade)
+				if err != nil {
+					log.Printf("推送撮合訊息失敗給客戶端 [%s]: %v", client.ID, err)
+				}
+			}
+			clientsMu.Unlock()
 
 			if buyOrder.Quantity == 0 {
 				removeOrder(&book.BuyOrders, buyOrder.ID)

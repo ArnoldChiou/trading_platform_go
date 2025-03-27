@@ -43,7 +43,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		var order Order
 		if err := conn.ReadJSON(&order); err != nil {
-			log.Println("讀取訊息錯誤:", err)
+			log.Println("讀取訊息錯誤 (正常斷線或異常斷線):", err)
 			break
 		}
 		order.ID = time.Now().UnixNano()
@@ -52,6 +52,16 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("收到訂單來自 [%s]: %+v", clientID, order)
 
 		AddOrder(&order, clientID)
+
+		// 這裡主動回應給 API Gateway
+		ack := map[string]interface{}{
+			"status": "received",
+			"order":  order,
+		}
+		if err := conn.WriteJSON(ack); err != nil {
+			log.Println("回應 WebSocket 訊息錯誤:", err)
+			break
+		}
 	}
 }
 

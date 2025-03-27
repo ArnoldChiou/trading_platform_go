@@ -31,8 +31,15 @@ func getWSConn() (*websocket.Conn, error) {
 	return wsConn, err
 }
 
+type Order struct {
+	Type     string  `json:"type"`
+	Symbol   string  `json:"symbol"`
+	Price    float64 `json:"price"`
+	Quantity float64 `json:"quantity"`
+}
+
 // 發送訂單給 Matching Engine
-func SendOrderToEngine(order interface{}) (map[string]interface{}, error) {
+func SendOrderToEngine(order Order) (map[string]interface{}, error) {
 	wsMux.Lock()
 	defer wsMux.Unlock()
 
@@ -42,7 +49,6 @@ func SendOrderToEngine(order interface{}) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	// 設定發送Timeout
 	ws.SetWriteDeadline(time.Now().Add(5 * time.Second))
 	if err := ws.WriteJSON(order); err != nil {
 		log.Println("WebSocket 發送錯誤:", err)
@@ -50,8 +56,6 @@ func SendOrderToEngine(order interface{}) (map[string]interface{}, error) {
 	}
 
 	var response map[string]interface{}
-
-	// 設定回覆Timeout
 	ws.SetReadDeadline(time.Now().Add(5 * time.Second))
 	if err := ws.ReadJSON(&response); err != nil {
 		log.Println("WebSocket 接收錯誤:", err)
