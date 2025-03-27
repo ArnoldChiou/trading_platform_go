@@ -3,6 +3,7 @@ package engine
 import (
 	"log"
 	"sync"
+	"time"
 )
 
 // OrderBook 存放等待成交的訂單
@@ -18,7 +19,7 @@ var book = OrderBook{
 }
 
 // 新增訂單並嘗試撮合
-func AddOrder(order *Order) {
+func AddOrder(order *Order, clientID string) {
 	book.mu.Lock()
 	defer book.mu.Unlock()
 
@@ -26,48 +27,53 @@ func AddOrder(order *Order) {
 
 	if order.Type == BUY {
 		book.BuyOrders = append(book.BuyOrders, order)
-	} else if order.Type == SELL {
+	} else {
 		book.SellOrders = append(book.SellOrders, order)
 	}
 
-	matchOrders(order.Symbol)
+	matchOrders(order.Symbol, clientID)
 }
 
 // 撮合邏輯
-func matchOrders(symbol string) {
-	var matched []*Order
-
-	// 持續撮合直到無法成交
+func matchOrders(symbol, clientID string) {
 	for {
 		buyOrder, sellOrder := bestBid(), bestAsk()
 		if buyOrder == nil || sellOrder == nil {
 			break
 		}
 
-		// 買價需高於或等於賣價才能成交
 		if buyOrder.Price >= sellOrder.Price {
 			execQty := min(buyOrder.Quantity, sellOrder.Quantity)
-			log.Printf("成交: BUY[%d] & SELL[%d] @ %.2f (%f units)", buyOrder.ID, sellOrder.ID, sellOrder.Price, execQty)
+			price := sellOrder.Price
 
 			buyOrder.Quantity -= execQty
 			sellOrder.Quantity -= execQty
 
+			trade := map[string]interface{}{
+				"status":   "matched",
+				"symbol":   symbol,
+				"price":    price,
+				"quantity": execQty,
+				"buy_id":   buyOrder.ID,
+				"sell_id":  sellOrder.ID,
+				"time":     time.Now(),
+			}
+
+			log.Printf("成交通知: %+v", trade)
+
+			// 成交後通知買賣雙方 (此範例簡單處理，實務需紀錄雙方clientID)
+			notifyClient(clientID, trade)
+
 			if buyOrder.Quantity == 0 {
-				matched = append(matched, buyOrder)
 				removeOrder(&book.BuyOrders, buyOrder.ID)
 			}
 
 			if sellOrder.Quantity == 0 {
-				matched = append(matched, sellOrder)
 				removeOrder(&book.SellOrders, sellOrder.ID)
 			}
 		} else {
 			break
 		}
-	}
-
-	if len(matched) == 0 {
-		log.Println("沒有撮合成功的訂單")
 	}
 }
 

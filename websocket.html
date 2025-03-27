@@ -48,6 +48,15 @@
     .status.closed {
       color: gray;
     }
+
+    textarea {
+      padding: 0.5em;
+      margin-top: 1em;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical; /* 可垂直拉動調整大小 */
+    }
   </style>
 </head>
 
@@ -64,9 +73,10 @@
   <div id="status" class="status closed">🔌 尚未連線</div>
 
   <div style="margin-top: 1em;">
-    <input type="text" id="message" placeholder="輸入訊息" />
+    <textarea id="message" placeholder="輸入訊息" rows="6" cols="50"></textarea><br>
     <button onclick="sendMessage()">送出訊息</button>
   </div>
+  
 
   <h3>📜 Log：</h3>
   <div id="log"></div>
