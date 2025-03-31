@@ -4,7 +4,8 @@ import { connectWS } from './ws';
 
 function App() {
   const [order, setOrder] = useState({
-    type: 'BUY',
+    user_id: 123,
+    side: 'BUY',
     symbol: 'BTCUSD',
     price: 42000,
     quantity: 1,
@@ -37,7 +38,7 @@ function App() {
 
       <div style={{ marginBottom: '1rem' }}>
         <label>類型：</label>
-        <select value={order.type} onChange={(e) => setOrder({ ...order, type: e.target.value })}>
+        <select value={order.side} onChange={(e) => setOrder({ ...order, side: e.target.value })}>
           <option value="BUY">BUY</option>
           <option value="SELL">SELL</option>
         </select>

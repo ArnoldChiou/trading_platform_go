@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 	"time"
+	"trading_platform_go/internal/engine"
 
 	"github.com/gorilla/websocket"
 )
@@ -39,7 +40,7 @@ type Order struct {
 }
 
 // 發送訂單給 Matching Engine
-func SendOrderToEngine(order Order) (map[string]interface{}, error) {
+func SendOrderToEngine(order engine.Order) (interface{}, error) {
 	wsMux.Lock()
 	defer wsMux.Unlock()
 

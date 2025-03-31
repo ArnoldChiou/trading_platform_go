@@ -10,10 +10,12 @@ const (
 )
 
 type Order struct {
-	ID        int64     `json:"id"`
-	Type      OrderType `json:"type"`
+	ID        int64 `json:"id"`
+	UserID    int
+	Type      OrderType `json:"side"`
 	Symbol    string    `json:"symbol"`
 	Price     float64   `json:"price"`
 	Quantity  float64   `json:"quantity"`
+	Side      string
 	Timestamp time.Time `json:"timestamp"`
 }

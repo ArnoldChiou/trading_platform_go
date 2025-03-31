@@ -25,13 +25,14 @@ func AddOrder(order *Order, clientID string) {
 
 	log.Printf("新訂單進入：%+v", order)
 
-	if order.Type == BUY {
+	if order.Side == "BUY" {
 		book.BuyOrders = append(book.BuyOrders, order)
 	} else {
 		book.SellOrders = append(book.SellOrders, order)
 	}
 
 	matchOrders(order.Symbol, clientID)
+
 }
 
 // 撮合邏輯
@@ -60,6 +61,7 @@ func matchOrders(symbol, clientID string) {
 			}
 
 			log.Printf("成交通知: %+v", trade)
+			log.Printf("撮合結果：買單[%v], 賣單[%v]", buyOrder, sellOrder)
 
 			// 【重點】推送給所有已連線的客戶端
 			clientsMu.Lock()
