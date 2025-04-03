@@ -1,0 +1,41 @@
+trading_platform_go/
+├── .git/
+├── .venv/
+├── .vscode/
+├── cmd/
+├── internal/
+│   ├── gateway/
+│   └── engine/
+├── pkg/
+│   └── utils/
+├── risk-service/
+│   ├── __pycache__/
+│   ├── models/
+│   ├── routers/
+│   │   └── orders.py
+│   ├── main.py
+│   └── requirements.txt
+├── scripts/
+├── test/
+├── trading-platform-web/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── api.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   └── ws.js
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── README.md
+│   └── vite.config.js
+├── go.mod
+├── go.sum
+├── main.go
+├── README.md
+└── websocket.html 

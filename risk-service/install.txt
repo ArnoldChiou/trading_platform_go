@@ -1,0 +1,14 @@
+pip install uvicorn
+uvicorn main:app --reload
+
+
+啟動後的預設網址：
+啟動成功後，你應該會看到類似下面的訊息：
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+這表示你的 FastAPI 已經開始運行，並監聽於：
+http://127.0.0.1:8000
+
+並且可開啟以下網址確認服務正常運行：
+API docs:
+Swagger UI: http://127.0.0.1:8000/docs
+ReDoc: http://127.0.0.1:8000/redoc

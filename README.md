@@ -1,127 +1,154 @@
 # Trading Platform (Go)
 
-![Go](https://img.shields.io/badge/Go-1.24-blue)
+![Go](https://img.shields.io/badge/Go-1.24-blue) ![React](https://img.shields.io/badge/React-19.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.95-green)
 
-A scalable and modular trading platform written in Go. This project consists of an **API Gateway**, a **Matching Engine**, and a **React Frontend** designed to handle trading operations efficiently and provide real-time updates.
+A scalable and modular trading platform written in Go, React, and Python. This project consists of an **API Gateway**, a **Matching Engine**, a **Risk Management Service**, and a **React Frontend** designed to handle trading operations efficiently and provide real-time updates.
+
+---
 
 ## Project Structure
 
 ```
 trading-platform-go/
-├── cmd
-│   ├── api-gateway
-│   │   └── main.go
-│   └── matching-engine
-│       └── main.go
-├── internal
-│   ├── gateway
-│   │   ├── handlers.go
-│   │   ├── routes.go
-│   │   └── ws_client.go
-│   └── engine
-│       ├── websocket.go
-│       ├── match.go
-│       └── order.go
-├── pkg
-│   └── utils
-│       └── helpers.go
-├── go.mod
-└── go.sum
+├── cmd/
+│   ├── api-gateway/         # API Gateway entry point
+│   └── matching-engine/     # Matching Engine entry point
+├── internal/
+│   ├── gateway/             # API Gateway logic (routes, handlers, WebSocket client)
+│   └── engine/              # Matching Engine logic (order matching, WebSocket server)
+├── pkg/
+│   └── utils/               # Utility functions
+├── risk-service/            # Python-based Risk Management Service
+│   ├── models/              # Data models
+│   ├── routers/             # API routes
+│   ├── main.py              # FastAPI entry point
+│   └── requirements.txt     # Python dependencies
+├── trading-platform-web/    # React frontend
+│   ├── src/                 # Frontend source code
+│   ├── public/              # Static assets
+│   ├── package.json         # Frontend dependencies
+│   └── vite.config.js       # Vite configuration
+├── go.mod                   # Go module dependencies
+├── go.sum                   # Go module checksums
+└── README.md                # Project documentation
 ```
+
+---
 
 ## Features
 
 - **API Gateway**: Manages client requests and routes them to the appropriate services via REST and WebSocket.
 - **Matching Engine**: Handles trade matching and execution using FIFO logic.
+- **Risk Management Service**: Python-based service to validate trading orders.
 - **WebSocket Support**: Provides real-time updates and notifications for trading events.
-- **React Frontend Integration**: Web interface built with React, integrated via REST APIs and WebSocket for real-time trading.
+- **React Frontend**: Web interface built with React, integrated via REST APIs and WebSocket for real-time trading.
 - **Modular Architecture**: Organized structure for scalability and maintainability.
 
-## Current Progress
+---
 
-✅ **Matching Logic Implemented**: Robust trade matching logic with real-time client notifications.
+## Prerequisites
 
-✅ **API Gateway Integrated**: API Gateway connected to the Matching Engine, supporting cross-service communication.
+- **Go**: Version 1.24.1 or higher
+- **Node.js**: Version 16 or higher (for React frontend)
+- **Python**: Version 3.10 or higher (for Risk Management Service)
+- **Docker**: Optional, for containerized deployment
 
-✅ **Real-Time Web Interface**: React frontend fully integrated and functional, with live updates through WebSocket.
+---
 
-## Next Steps
+## Setup and Installation
 
-- **User Authentication and Account Management**: Implement user management, authentication (JWT), and permissions.
-- **Risk Management Module**: Develop a Python-based risk management engine to enforce trading rules.
-- **Database Integration**: Persist orders and trade history using PostgreSQL or Redis.
-- **Deployment Automation**: Containerize services with Docker and automate deployments using CI/CD pipelines.
+### Clone the Repository
 
-## Getting Started
-
-### Prerequisites
-- Go 1.24.1+
-- Node.js & npm (for React frontend)
-- Docker (optional, for containerized deployment)
-
-### Installation
-
-```sh
+```bash
 git clone https://github.com/ArnoldChiou/trading-platform-go.git
 cd trading-platform-go
+```
+
+### Install Dependencies
+
+#### Backend (Go)
+```bash
 go mod tidy
 ```
 
-### Running the Services
+#### Risk Management Service (Python)
+```bash
+cd risk-service
+pip install -r requirements.txt
+```
 
-#### Matching Engine
+#### Frontend (React)
+```bash
+cd trading-platform-web
+npm install
+```
 
-```sh
+---
+
+## Running the Services
+
+### 1. Matching Engine
+```bash
 go run cmd/matching-engine/main.go
 ```
 
-#### API Gateway
-
-```sh
+### 2. API Gateway
+```bash
 go run cmd/api-gateway/main.go
 ```
 
-#### React Frontend
+### 3. Risk Management Service
+```bash
+cd risk-service
+uvicorn main:app --reload
+```
 
-```sh
+### 4. React Frontend
+```bash
 cd trading-platform-web
-npm install
 npm run dev
 ```
 
 Open your browser at `http://localhost:5173`.
 
+---
+
 ## Example Usage
 
+### Submit Orders via Frontend
+
 1. Navigate to `http://localhost:5173`.
-2. Submit a buy and sell order via the React interface:
+2. Fill in the order details (e.g., type, symbol, price, quantity) and submit.
 
-**Buy Order Example:**
-```json
-{
-	"type": "BUY",
-	"symbol": "BTCUSD",
-	"price": 42000,
-	"quantity": 1
-}
-```
+### WebSocket Real-Time Updates
 
-**Sell Order Example:**
-```json
-{
-	"type": "SELL",
-	"symbol": "BTCUSD",
-	"price": 41950,
-	"quantity": 1
-}
-```
+- The frontend receives real-time trade execution updates via WebSocket.
 
-The Matching Engine will automatically execute and notify you in real-time via WebSocket.
+### API Endpoints
+
+#### API Gateway
+- **POST** `/api/order`: Submit a trading order.
+
+#### Risk Management Service
+- **POST** `/api/order/validate`: Validate a trading order.
+
+---
+
+## Next Steps
+
+- **User Authentication**: Add JWT-based authentication and user management.
+- **Database Integration**: Persist orders and trade history using PostgreSQL or Redis.
+- **Deployment**: Containerize services with Docker and automate deployments using CI/CD pipelines.
+
+---
 
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
 
+---
+
 ## License
-This project is licensed under the Arnold License.
+
+This project is licensed under the MIT License.
 

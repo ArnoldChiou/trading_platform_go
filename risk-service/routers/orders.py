@@ -9,7 +9,8 @@ class OrderRequest(BaseModel):
     symbol: str
     price: float
     quantity: float
-    side: str = Field(..., regex="^(BUY|SELL)$")
+    side: str = Field(..., pattern="^(BUY|SELL)$")
+
 
 MAX_QUANTITY = 100.0
 ALLOWED_SYMBOLS = {"BTCUSD", "ETHUSD"}
