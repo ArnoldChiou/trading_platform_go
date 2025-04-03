@@ -13,7 +13,7 @@ type RiskOrderRequest struct {
 	Symbol   string  `json:"symbol"`
 	Price    float64 `json:"price"`
 	Quantity float64 `json:"quantity"`
-	Side     string  `json:"side"`
+	Type     string  `json:"type"`
 }
 
 type RiskResponse struct {

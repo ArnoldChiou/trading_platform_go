@@ -14,7 +14,7 @@ type OrderRequest struct {
 	Symbol   string  `json:"symbol"`
 	Price    float64 `json:"price"`
 	Quantity float64 `json:"quantity"`
-	Side     string  `json:"side"`
+	Type     string  `json:"type"`
 }
 
 func OrderHandler(c *gin.Context) {
@@ -37,7 +37,7 @@ func OrderHandler(c *gin.Context) {
 		Symbol:    orderReq.Symbol,
 		Price:     orderReq.Price,
 		Quantity:  orderReq.Quantity,
-		Side:      orderReq.Side,
+		Type:      engine.OrderType(orderReq.Type),
 		Timestamp: time.Now(),
 	}
 

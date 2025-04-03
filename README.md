@@ -1,6 +1,6 @@
 # Trading Platform (Go)
 
-![Go](https://img.shields.io/badge/Go-1.24-blue) ![React](https://img.shields.io/badge/React-19.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.95-green)
+![Go](https://img.shields.io/badge/Go-1.24-blue) ![React](https://img.shields.io/badge/React-19.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.95-green) ![Python](https://img.shields.io/badge/Python-3.13-yellow)
 
 A scalable and modular trading platform written in Go, React, and Python. This project consists of an **API Gateway**, a **Matching Engine**, a **Risk Management Service**, and a **React Frontend** designed to handle trading operations efficiently and provide real-time updates.
 
@@ -12,24 +12,57 @@ A scalable and modular trading platform written in Go, React, and Python. This p
 trading-platform-go/
 ├── cmd/
 │   ├── api-gateway/         # API Gateway entry point
+│   │   └── main.go
 │   └── matching-engine/     # Matching Engine entry point
+│       └── main.go
 ├── internal/
 │   ├── gateway/             # API Gateway logic (routes, handlers, WebSocket client)
+│   │   ├── handlers.go
+│   │   ├── risk_client.go
+│   │   ├── routes.go
+│   │   └── ws_client.go
 │   └── engine/              # Matching Engine logic (order matching, WebSocket server)
+│       ├── match.go
+│       ├── order.go
+│       └── websocket.go
 ├── pkg/
 │   └── utils/               # Utility functions
+│       └── helpers.go
 ├── risk-service/            # Python-based Risk Management Service
 │   ├── models/              # Data models
+│   │   └── order.py
 │   ├── routers/             # API routes
+│   │   ├── orders.py
+│   │   └── __pycache__/
+│   ├── tests/               # Unit tests
+│   │   ├── test_orders.py
+│   │   └── __pycache__/
+│   ├── install.txt          # Installation instructions
 │   ├── main.py              # FastAPI entry point
 │   └── requirements.txt     # Python dependencies
+├── scripts/                 # Utility scripts
+├── test/                    # Go unit tests
+│   └── engine_match_test.go
 ├── trading-platform-web/    # React frontend
-│   ├── src/                 # Frontend source code
 │   ├── public/              # Static assets
+│   │   └── vite.svg
+│   ├── src/                 # Frontend source code
+│   │   ├── api.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── ws.js
+│   │   └── assets/
+│   │       └── react.svg
+│   ├── eslint.config.js     # ESLint configuration
+│   ├── index.html           # HTML entry point
 │   ├── package.json         # Frontend dependencies
-│   └── vite.config.js       # Vite configuration
+│   ├── vite.config.js       # Vite configuration
+│   └── README.md            # Frontend documentation
 ├── go.mod                   # Go module dependencies
 ├── go.sum                   # Go module checksums
+├── websocket.html           # WebSocket testing page
 └── README.md                # Project documentation
 ```
 

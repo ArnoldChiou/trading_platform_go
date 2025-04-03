@@ -19,20 +19,31 @@ var book = OrderBook{
 }
 
 // 新增訂單並嘗試撮合
+// AddOrder adds a new order to the order book and attempts to match it with existing orders.
+// It locks the order book to ensure thread safety during the operation.
+//
+// Parameters:
+//   - order: A pointer to the Order struct representing the new order to be added.
+//   - clientID: A string representing the ID of the client placing the order.
+//
+// The function appends the order to the appropriate side of the order book (BuyOrders or SellOrders)
+// based on the order's Type field. After adding the order, it calls matchOrders to attempt matching
+// the new order with existing orders in the book.
+//
+// Note: The function logs the details of the new order for debugging purposes.
 func AddOrder(order *Order, clientID string) {
 	book.mu.Lock()
 	defer book.mu.Unlock()
 
 	log.Printf("新訂單進入：%+v", order)
 
-	if order.Side == "BUY" {
+	if order.Type == BUY {
 		book.BuyOrders = append(book.BuyOrders, order)
 	} else {
 		book.SellOrders = append(book.SellOrders, order)
 	}
 
 	matchOrders(order.Symbol, clientID)
-
 }
 
 // 撮合邏輯
@@ -126,4 +137,9 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+// GetOrderBook returns a reference to the order book
+func GetOrderBook() *OrderBook {
+	return &book
 }

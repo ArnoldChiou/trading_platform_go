@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 import datetime
+from datetime import datetime, timezone
 
 router = APIRouter()
 
@@ -9,7 +10,7 @@ class OrderRequest(BaseModel):
     symbol: str
     price: float
     quantity: float
-    side: str = Field(..., pattern="^(BUY|SELL)$")
+    type: str = Field(..., pattern="^(BUY|SELL)$")  # 修改為使用 pattern
 
 
 MAX_QUANTITY = 100.0
@@ -28,6 +29,6 @@ def validate_order(order: OrderRequest):
 
     return {
         "status": "approved",
-        "timestamp": datetime.datetime.utcnow(),
-        "order": order.dict()
+        "timestamp": datetime.now(timezone.utc),  # Updated to use timezone-aware datetime
+        "order": order.model_dump()  # Updated to use Pydantic's model_dump
     }

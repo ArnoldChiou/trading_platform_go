@@ -5,7 +5,7 @@ import { connectWS } from './ws';
 function App() {
   const [order, setOrder] = useState({
     user_id: 123,
-    side: 'BUY',
+    type: 'BUY', // 修改為 type
     symbol: 'BTCUSD',
     price: 42000,
     quantity: 1,
@@ -15,7 +15,10 @@ function App() {
   useEffect(() => {
     const ws = connectWS(
       'ws://localhost:5002/ws',
-      (msg) => setMessages((prev) => [...prev, msg]),
+      (msg) => {
+        console.log('📥 收到 WebSocket 訊息:', msg);
+        setMessages((prev) => [...prev, msg]);
+      },
       () => console.log('WebSocket opened'),
       () => console.log('WebSocket closed')
     );
@@ -38,7 +41,7 @@ function App() {
 
       <div style={{ marginBottom: '1rem' }}>
         <label>類型：</label>
-        <select value={order.side} onChange={(e) => setOrder({ ...order, side: e.target.value })}>
+        <select value={order.type} onChange={(e) => setOrder({ ...order, type: e.target.value })}>
           <option value="BUY">BUY</option>
           <option value="SELL">SELL</option>
         </select>
