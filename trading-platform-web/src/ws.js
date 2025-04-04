@@ -8,7 +8,12 @@ export const connectWS = (url, onMessage, onOpen, onClose) => {
 
   ws.onmessage = (event) => {
     console.log('📥 收到 WebSocket 訊息:', event.data);
-    if (onMessage) onMessage(JSON.parse(event.data));
+    try {
+      const parsedData = JSON.parse(event.data);
+      if (onMessage) onMessage(parsedData);
+    } catch (error) {
+      console.error('解析 WebSocket 訊息失敗:', error);
+    }
   };
 
   ws.onclose = () => {

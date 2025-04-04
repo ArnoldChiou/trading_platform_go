@@ -30,7 +30,7 @@ func validateOrderWithPython(order RiskOrderRequest) error {
 
 	req, err := http.NewRequest(
 		http.MethodPost,
-		"http://localhost:5001/api/order/validate",
+		"http://127.0.0.1:8000/api/order/validate",
 		bytes.NewBuffer(jsonData),
 	)
 	if err != nil {
