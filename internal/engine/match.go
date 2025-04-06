@@ -1,9 +1,13 @@
 package engine
 
 import (
+	"context"
+	"encoding/json"
 	"log"
 	"sync"
 	"time"
+
+	"github.com/segmentio/kafka-go"
 )
 
 // OrderBook 存放等待成交的訂單
@@ -16,6 +20,28 @@ type OrderBook struct {
 var book = OrderBook{
 	BuyOrders:  []*Order{},
 	SellOrders: []*Order{},
+}
+
+var kafkaWriter = kafka.NewWriter(kafka.WriterConfig{
+	Brokers: []string{"localhost:9092"},
+	Topic:   "trade_records",
+})
+
+func sendToKafka(trade map[string]interface{}) {
+	data, err := json.Marshal(trade)
+	if err != nil {
+		log.Printf("Kafka 序列化錯誤: %v", err)
+		return
+	}
+
+	err = kafkaWriter.WriteMessages(context.Background(), kafka.Message{
+		Value: data,
+	})
+	if err != nil {
+		log.Printf("Kafka 發送錯誤: %v", err)
+	} else {
+		log.Println("交易資料已發送至 Kafka")
+	}
 }
 
 // 新增訂單並嘗試撮合
@@ -72,6 +98,7 @@ func matchOrders(symbol, clientID string) {
 			}
 
 			log.Printf("成交通知: %+v", trade)
+			sendToKafka(trade)
 			log.Printf("撮合結果：買單[%v], 賣單[%v]", buyOrder, sellOrder)
 
 			// 【重點】推送給所有已連線的客戶端
