@@ -13,15 +13,15 @@ trading-platform-go/
 ├── cmd/
 │   ├── api-gateway/         # API Gateway entry point
 │   │   └── main.go
-│   └── matching-engine/     # Matching Engine entry point
+│   └── matching-engine/     # Matching Engine entry 
 │       └── main.go
 ├── internal/
-│   ├── gateway/             # API Gateway logic (routes, handlers, WebSocket client)
+│   ├── gateway/             # API Gateway logic 
 │   │   ├── handlers.go
 │   │   ├── risk_client.go
 │   │   ├── routes.go
 │   │   └── ws_client.go
-│   └── engine/              # Matching Engine logic (order matching, WebSocket server)
+│   └── engine/              # Matching Engine logic 
 │       ├── match.go
 │       ├── order.go
 │       └── websocket.go
@@ -33,13 +33,15 @@ trading-platform-go/
 │   │   └── order.py
 │   ├── routers/             # API routes
 │   │   ├── orders.py
-│   │   └── __pycache__/
+│   │   └── trades.py
 │   ├── tests/               # Unit tests
 │   │   ├── test_orders.py
-│   │   └── __pycache__/
+│   │   └── report.html
 │   ├── install.txt          # Installation instructions
 │   ├── main.py              # FastAPI entry point
 │   └── requirements.txt     # Python dependencies
+├── kafka-consumer-service/  # Kafka consumer service for trade records
+│   └── main.py
 ├── scripts/                 # Utility scripts
 ├── test/                    # Go unit tests
 │   └── engine_match_test.go
@@ -53,6 +55,7 @@ trading-platform-go/
 │   │   ├── index.css
 │   │   ├── main.jsx
 │   │   ├── ws.js
+│   │   ├── TradeChart.jsx
 │   │   └── assets/
 │   │       └── react.svg
 │   ├── eslint.config.js     # ESLint configuration
@@ -63,6 +66,7 @@ trading-platform-go/
 ├── go.mod                   # Go module dependencies
 ├── go.sum                   # Go module checksums
 ├── websocket.html           # WebSocket testing page
+├── project_structure.txt    # Project structure overview
 └── README.md                # Project documentation
 ```
 
@@ -73,8 +77,10 @@ trading-platform-go/
 - **API Gateway**: Manages client requests and routes them to the appropriate services via REST and WebSocket.
 - **Matching Engine**: Handles trade matching and execution using FIFO logic.
 - **Risk Management Service**: Python-based service to validate trading orders.
+- **Kafka Consumer**: Consumes trade records from Kafka and stores them in PostgreSQL.
 - **WebSocket Support**: Provides real-time updates and notifications for trading events.
 - **React Frontend**: Web interface built with React, integrated via REST APIs and WebSocket for real-time trading.
+- **Database Integration**: PostgreSQL for persisting trade records.
 - **Modular Architecture**: Organized structure for scalability and maintainability.
 
 ---
@@ -84,6 +90,8 @@ trading-platform-go/
 - **Go**: Version 1.24.1 or higher
 - **Node.js**: Version 16 or higher (for React frontend)
 - **Python**: Version 3.10 or higher (for Risk Management Service)
+- **PostgreSQL**: Version 13 or higher
+- **Kafka**: For trade record streaming
 - **Docker**: Optional, for containerized deployment
 
 ---
@@ -136,7 +144,13 @@ cd risk-service
 uvicorn main:app --reload
 ```
 
-### 4. React Frontend
+### 4. Kafka Consumer Service
+```bash
+cd kafka-consumer-service
+python main.py
+```
+
+### 5. React Frontend
 ```bash
 cd trading-platform-web
 npm run dev
@@ -164,13 +178,14 @@ Open your browser at `http://localhost:5173`.
 
 #### Risk Management Service
 - **POST** `/api/order/validate`: Validate a trading order.
+- **POST** `/api/trades`: Query trade records.
 
 ---
 
 ## Next Steps
 
 - **User Authentication**: Add JWT-based authentication and user management.
-- **Database Integration**: Persist orders and trade history using PostgreSQL or Redis.
+- **Advanced Analytics**: Integrate real-time analytics for trade performance.
 - **Deployment**: Containerize services with Docker and automate deployments using CI/CD pipelines.
 
 ---
