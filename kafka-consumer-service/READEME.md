@@ -31,5 +31,5 @@ This will output a new UUID each time it is executed.
 Use the following command to start Kafka with the `server.properties` configuration:
 
 ```bash
-.\bin\windows\kafka-server-start.bat .\config\kraft\server.properties
+.\bin\windows\kafka-server-start.bat .\config\server.properties
 ```
